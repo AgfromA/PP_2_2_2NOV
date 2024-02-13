@@ -4,8 +4,8 @@ import org.springframework.stereotype.Repository;
 import web.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -20,9 +20,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserById(int id) {
-        TypedQuery<User> q = entityManager.createQuery("select u from User u where u.id = :id", User.class);
-        q.setParameter("id", id);
-        return q.getResultList().stream().findAny().orElse(null);
+        User user = entityManager.find(User.class, id);
+        if (user == null) {
+            throw new EntityNotFoundException("Пользователь с id " + id + " не найден");
+        } else {
+            return user;
+        }
     }
 
     @Override
@@ -32,13 +35,22 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUser(int id, User updateUser) {
-        entityManager.merge(updateUser);
-        entityManager.flush();
+        User existingUser = entityManager.find(User.class, id);
+        if (existingUser == null) {
+            throw new EntityNotFoundException("Пользователь с id " + id + " не найден");
+        } else {
+            entityManager.merge(updateUser);
+            entityManager.flush();
+        }
     }
 
     @Override
     public void removeUser(int id) {
         User user = entityManager.find(User.class, id);
-        entityManager.remove(user);
+        if (user == null) {
+            throw new EntityNotFoundException("Пользователь с id " + id + " не найден");
+        } else {
+            entityManager.remove(user);
+        }
     }
 }

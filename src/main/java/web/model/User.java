@@ -1,6 +1,14 @@
 package web.model;
 
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Entity
@@ -10,11 +18,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
+    @NotBlank(message = "Имя не должно быть пустым")
     private String name;
     @Column
+    @NotBlank(message = "Фамилия не должна быть пустой")
     private String lastName;
-
     @Column
+    @Email(message = "Невалидный адрес электронной почты")
     private String email;
 
     public User() {
