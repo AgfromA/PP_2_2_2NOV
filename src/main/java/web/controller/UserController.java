@@ -38,11 +38,12 @@ public class UserController {
         return "new";
     }
 
-    @PostMapping()//"/new"
-    public String create(@ModelAttribute("users") User user) {
-        userService.addUser(user);
-        return "redirect:/people";
-
+    @PostMapping()//
+    public String create(@ModelAttribute("users") @Valid User user, BindingResult bindingResult) {
+        if(bindingResult.hasErrors())
+            return "/new";
+            userService.addUser(user);
+            return "redirect:/people";
     }
 
     @GetMapping("/edit")

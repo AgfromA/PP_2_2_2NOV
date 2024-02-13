@@ -8,23 +8,28 @@ import javax.persistence.Table;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
-    @NotBlank(message = "Имя не должно быть пустым")
+    @NotEmpty(message = "Имя не должно быть пустым")
+    @Size(min = 2, max = 30, message = "Длина имени не может быть меньше 2 символов и больше 30!")
     private String name;
     @Column
-    @NotBlank(message = "Фамилия не должна быть пустой")
+    @NotEmpty(message = "Фамилия не должна быть пустой")
+    @Size(min = 2, max = 30, message = "Длина фамилии не может быть меньше 2 символов и больше 30!")
     private String lastName;
     @Column
-    @Email(message = "Невалидный адрес электронной почты")
+    @Email(message = "Недопустимый адрес электронной почты")
+    @NotEmpty(message = "Email не должен быть пустым")
     private String email;
 
     public User() {
