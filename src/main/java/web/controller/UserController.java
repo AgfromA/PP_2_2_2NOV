@@ -57,10 +57,12 @@ public class UserController {
     @PostMapping("/update")
     public String update(@ModelAttribute("users") @Valid  User user,
                          BindingResult bindingResult, @RequestParam("id") int id) {
-        if (bindingResult.hasErrors())
+        if (bindingResult.hasErrors()){
             return "edit";
+        }else {
         userService.updateUser(id, user);
         return "redirect:/people";
+    }
     }
 
     @GetMapping("/removeUser")
